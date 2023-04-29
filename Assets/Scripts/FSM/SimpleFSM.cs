@@ -25,7 +25,7 @@ public class SimpleFSM : FSM
     // NPC life
     private bool _tDead = false;
     private int _health = 100;
-    private new Rigidbody _rigidbody;
+    private Rigidbody _rigidbody;
     protected Transform PlayerTransform;
     
     // Next destination

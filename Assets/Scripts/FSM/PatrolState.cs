@@ -22,19 +22,19 @@ public class PatrolState : FSMState
     public override void CheckTransitionRules(Transform player, Transform npc)
     {
         // Check distance to player to chase
-        /*if (Vector3.Distance(npc.position, player.position) <= _playerNearRadius)
+        if (Vector3.Distance(npc.position, player.position) <= _playerNearRadius)
         {
             Debug.Log("Chasing");
             NPCTankController npcTankController = npc.GetComponent<NPCTankController>();
             if (npcTankController != null)
             {
-                npc.GetComponent<NPCTankController>().SetTransaction(Transition.SawPlayer);
+                npc.GetComponent<NPCTankController>().SetTransition(Transition.SawPlayer);
             }
             else
             {
                 Debug.LogError("NPCTankController not found");
             }
-        }*/
+        }
     }
 
     public override void RunState(Transform player, Transform npc)
@@ -51,7 +51,7 @@ public class PatrolState : FSMState
         npc.rotation = Quaternion.Slerp(npc.rotation, targetRotation, Time.deltaTime * _currentRotationSpeed);
         
         // Move forward
-        npc.Translate(Vector3.forward * Time.deltaTime * _currentSpeed);
+        npc.Translate(Vector3.forward * (Time.deltaTime * _currentSpeed));
     }
 
     private void FindNextPoint()

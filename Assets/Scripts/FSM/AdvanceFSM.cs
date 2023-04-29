@@ -37,7 +37,7 @@ public class AdvanceFSM : FSM
     }
     
     // Add new state
-    public void AddFSMState(FSMState fsmState)
+    protected void AddFSMState(FSMState fsmState)
     {
         // First state = initial state
         if (_fsmStates.Count == 0)
@@ -78,7 +78,7 @@ public class AdvanceFSM : FSM
     }
     
     // Transition
-    public void PerformTransition(Transition transition)
+    protected void PerformTransition(Transition transition)
     {
         if (transition == Transition.None)
         {
