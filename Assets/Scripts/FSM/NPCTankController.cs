@@ -102,7 +102,7 @@ public class NPCTankController : AdvanceFSM
     {
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            _health -= 50;
+            _health -= 20;
             if (_health <= 0)
             {
                 Debug.Log("NPC: Dead state");
@@ -128,6 +128,7 @@ public class NPCTankController : AdvanceFSM
     {
         if (elapsedTime >= shootRate)
         {
+            Bullet.tag = "NPCBullet";
             Instantiate(Bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
             elapsedTime = 0.0f;
         }

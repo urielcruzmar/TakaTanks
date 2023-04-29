@@ -17,6 +17,7 @@ public class PlayerTankController : MonoBehaviour
     [SerializeField] private float attackSpeed = 0.5f;
     private float _currentSpeed, _targetSpeed;
     private float _timePassed;
+    private float _health = 100;
 
     // Start is called before the first frame update
     void Start()
@@ -90,6 +91,19 @@ public class PlayerTankController : MonoBehaviour
             _timePassed = 0.0f;
             // Bullet instance
             Instantiate(bullet, bulletSpawnPoint.transform.position, bulletSpawnPoint.transform.rotation);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("NPCBullet"))
+        {
+            _health -= 20;
+            if (_health <= 0)
+            {
+                Debug.Log("Player dead");
+                Application.Quit();
+            }
         }
     }
 }

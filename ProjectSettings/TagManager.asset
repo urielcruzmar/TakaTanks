@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Bullet
   - WanderPoint
+  - NPCBullet
   layers:
   - Default
   - TransparentFX

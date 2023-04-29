@@ -48,7 +48,7 @@ public class AdvanceFSM : FSM
             return;
         }
 
-        foreach (FSMState state in _fsmStates)
+        foreach (FSMState state in _fsmStates.ToList())
         {
             if (state.ID == fsmState.ID)
             {
