@@ -13,7 +13,7 @@ public class PlayerTankController : MonoBehaviour
     [SerializeField] private float rotationSpeed = 150.0f;
     [SerializeField] private float turretRotationSpeed = 10.0f;
     [SerializeField] private float maxFrontSpeed = 300.0f;
-    [SerializeField] private float maxRearSpeed = 300.0f;
+    [SerializeField] private float maxRearSpeed = -300.0f;
     [SerializeField] private float attackSpeed = 0.5f;
     private float _currentSpeed, _targetSpeed;
     private float _timePassed;
@@ -38,7 +38,8 @@ public class PlayerTankController : MonoBehaviour
         Plane playersPlane = new Plane(Vector3.up, transform.position + new Vector3(0, 0, 0));
         
         // Raycast
-        Ray rayCast = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray rayCast = //Camera.main.ScreenPointToRay(Input.mousePosition);
+        UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
         
         // Distance
         float impactDistance = 0;

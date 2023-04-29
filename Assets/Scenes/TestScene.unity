@@ -261,14 +261,14 @@ MonoBehaviour:
   turret: {fileID: 541274037}
   bullet: {fileID: 100000, guid: 9b9d4461862db974fb79e91eb8effac8, type: 3}
   bulletSpawnPoint: {fileID: 541274036}
-  rotationSpeed: 150
+  rotationSpeed: 50
   turretRotationSpeed: 10
-  maxFrontSpeed: 120
-  maxRearSpeed: 120
+  maxFrontSpeed: 150
+  maxRearSpeed: -150
   attackSpeed: 0.5
---- !u!4 &541274043 stripped
+--- !u!4 &541274040 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 400000, guid: 1ae11e12b4123d6449de94743bba98eb, type: 3}
+  m_CorrespondingSourceObject: {fileID: 400002, guid: 1ae11e12b4123d6449de94743bba98eb, type: 3}
   m_PrefabInstance: {fileID: 541274034}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &705507993
@@ -540,14 +540,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.5, y: 0, z: 0, w: 0.8660254}
-  m_LocalPosition: {x: 0, y: 700, z: -500}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 500, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 60, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!114 &963194229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -557,12 +557,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 963194225}
   m_Enabled: 0
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adff116aa48189743805bdd83f1bdb22, type: 3}
+  m_Script: {fileID: 11500000, guid: 1c3bfe6afb6d5054687749d1115ab0b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  position: {x: 0, y: 10, z: -10}
-  rotation: {x: 30, y: 0, z: 0}
-  player: {fileID: 541274043}
+  player: {fileID: 541274040}
 --- !u!1 &1282827896
 GameObject:
   m_ObjectHideFlags: 0
@@ -824,7 +822,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1485901289}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a1b6e7f9cdb91b94da8d694ce7068618, type: 3}
   m_Name: 
@@ -837,6 +835,18 @@ MonoBehaviour:
   playerNearRadius: 300
   turret: {fileID: 1485901291}
   bulletSpawnPoint: {fileID: 1485901290}
+--- !u!114 &1485901293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1485901289}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c950d940dd6d954f83fe2942686d430, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1700252951
 GameObject:
   m_ObjectHideFlags: 0
