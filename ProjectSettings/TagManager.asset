@@ -7,6 +7,7 @@ TagManager:
   - Bullet
   - WanderPoint
   - NPCBullet
+  - RetreatPoint
   layers:
   - Default
   - TransparentFX

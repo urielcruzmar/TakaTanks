@@ -72,10 +72,10 @@ public abstract class FSMState
     }
     
     // Check if state has to make transition
-    public abstract void CheckTransitionRules(Transform player, Transform npc);
+    public abstract void CheckTransitionRules(Transform player, GameObject npc);
     
     // NPC Control
-    public abstract void RunState(Transform player, Transform npc);
+    public abstract void RunState(Transform player, GameObject npc);
 
     protected bool IsInCurrentRange(Transform transform, Vector3 position)
     {

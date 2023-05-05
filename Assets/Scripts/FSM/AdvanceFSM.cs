@@ -9,6 +9,7 @@ public enum Transition
         SawPlayer,
         ReachPlayer,
         LostPlayer,
+        Damaged,
         NoHealth
 }
 
@@ -18,6 +19,7 @@ public enum FSMStateID
     Patrolling,
     Chasing,
     Attacking,
+    Retreating,
     Dead
 }
 

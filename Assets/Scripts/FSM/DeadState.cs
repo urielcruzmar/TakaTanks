@@ -9,12 +9,12 @@ public class DeadState : FSMState
         StateID = FSMStateID.Dead;
     }
     
-    public override void CheckTransitionRules(Transform player, Transform npc)
+    public override void CheckTransitionRules(Transform player, GameObject npc)
     {
         
     }
 
-    public override void RunState(Transform player, Transform npc)
+    public override void RunState(Transform player, GameObject npc)
     {
         
     }

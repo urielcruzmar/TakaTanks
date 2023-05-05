@@ -7,13 +7,17 @@ using Random = UnityEngine.Random;
 
 public class NPCTankController : AdvanceFSM
 {
+    [SerializeField] private GameObject tankNPC;
+    
     public GameObject Bullet;
-    private int _health;
+    public int Health;
+
     private Rigidbody _rigidbody;
     protected Transform playerTransform;
     // Points
     protected Vector3 nextPosition;
     protected GameObject[] pointList;
+    protected GameObject[] retreatList;
     // Shooting
     protected float shootRate;
     protected float elapsedTime;
@@ -24,11 +28,11 @@ public class NPCTankController : AdvanceFSM
     // Turret
     public Transform turret;
     public Transform bulletSpawnPoint;
-    
+
     // FSM Initialize
     protected override void Initialize()
     {
-        _health = 100;
+        Health = 100;
         elapsedTime = 0.0f;
         shootRate = 2.0f;
         // Get enemy
@@ -54,8 +58,8 @@ public class NPCTankController : AdvanceFSM
 
     protected override void FSMFixedUpdate()
     {
-        CurrentState.CheckTransitionRules(playerTransform, transform);
-        CurrentState.RunState(playerTransform, transform);
+        CurrentState.CheckTransitionRules(playerTransform, gameObject);
+        CurrentState.RunState(playerTransform, gameObject);
     }
 
     public void SetTransition(Transition transition)
@@ -65,8 +69,8 @@ public class NPCTankController : AdvanceFSM
 
     private void ConstructFSM()
     {
+        // Waypoints list
         pointList = GameObject.FindGameObjectsWithTag("WanderPoint");
-        
         Transform[] waypoints = new Transform[pointList.Length];
         int i = 0;
         foreach (GameObject obj in pointList)
@@ -74,27 +78,51 @@ public class NPCTankController : AdvanceFSM
             waypoints[i] = obj.transform;
             i++;
         }
+        
+        // Retreat points list
+        retreatList = GameObject.FindGameObjectsWithTag("RetreatPoint");
+        Transform[] retreatPoints = new Transform[retreatList.Length];
+        i = 0;
+        foreach (GameObject obj in retreatList)
+        {
+            retreatPoints[i] = obj.transform;
+            i++;
+        }
 
+        // Patrol
         PatrolState patrolState = new PatrolState(waypoints, playerNearRadius, patrollingRadius);
         patrolState.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
+        patrolState.AddTransition(Transition.Damaged, FSMStateID.Retreating);
         patrolState.AddTransition(Transition.NoHealth, FSMStateID.Dead);
 
-        ChaseState chaseState = new ChaseState(waypoints);
+        // Chase
+        ChaseState chaseState = new ChaseState();
         chaseState.AddTransition(Transition.LostPlayer, FSMStateID.Patrolling);
         chaseState.AddTransition(Transition.ReachPlayer, FSMStateID.Attacking);
+        chaseState.AddTransition(Transition.Damaged, FSMStateID.Retreating);
         chaseState.AddTransition(Transition.NoHealth, FSMStateID.Dead);
 
+        // Attack
         AttackState attackState = new AttackState(waypoints);
         attackState.AddTransition(Transition.LostPlayer, FSMStateID.Patrolling);
         attackState.AddTransition(Transition.SawPlayer, FSMStateID.Chasing);
+        attackState.AddTransition(Transition.Damaged, FSMStateID.Retreating);
         attackState.AddTransition(Transition.NoHealth, FSMStateID.Dead);
 
+        // Retreat
+        RetreatState retreatState = new RetreatState(retreatPoints, playerTransform);
+        //retreatState.AddTransition(Transition.ReachPlayer, FSMStateID.Chasing);
+        retreatState.AddTransition(Transition.LostPlayer, FSMStateID.Patrolling);
+        retreatState.AddTransition(Transition.NoHealth, FSMStateID.Dead);
+
+        // Die
         DeadState deadState = new DeadState();
         deadState.AddTransition(Transition.NoHealth, FSMStateID.Dead);
         
         AddFSMState(patrolState);
         AddFSMState(chaseState);
         AddFSMState(attackState);
+        AddFSMState(retreatState);
         AddFSMState(deadState);
     }
 
@@ -102,8 +130,8 @@ public class NPCTankController : AdvanceFSM
     {
         if (collision.gameObject.CompareTag("Bullet"))
         {
-            _health -= 20;
-            if (_health <= 0)
+            Health -= 20;
+            if (Health <= 0)
             {
                 Debug.Log("NPC: Dead state");
                 SetTransition(Transition.NoHealth);
@@ -132,5 +160,16 @@ public class NPCTankController : AdvanceFSM
             Instantiate(Bullet, bulletSpawnPoint.position, bulletSpawnPoint.rotation);
             elapsedTime = 0.0f;
         }
+    }
+    
+    public void CallFriend(Vector3 destination)
+    {
+        // Instantiate friend
+        GameObject friend = Instantiate(tankNPC, destination, Quaternion.identity);
+        // Rotate friend
+        Quaternion friendTargetRotation = Quaternion.FromToRotation(Vector3.forward, destination - friend.transform.position);
+        friend.transform.rotation = Quaternion.Slerp(friend.transform.rotation, friendTargetRotation, Time.deltaTime * 50.0f);
+        // Move friend
+        friend.transform.Translate(Vector3.forward * (Time.deltaTime * 100.0f));
     }
 }

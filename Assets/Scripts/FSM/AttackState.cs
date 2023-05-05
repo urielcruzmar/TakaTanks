@@ -18,16 +18,24 @@ public class AttackState : FSMState
         FindNextPoint();
     }
 
-    public override void CheckTransitionRules(Transform player, Transform npc)
+    public override void CheckTransitionRules(Transform player, GameObject npc)
     {
-        float distance = Vector3.Distance(npc.position, player.position);
+        // Check health
+        var controller = npc.GetComponent<NPCTankController>();
+        if (controller.Health < 50)
+        {
+            controller.SetTransition(Transition.Damaged);
+            return;
+        }
+        // Check distance
+        float distance = Vector3.Distance(npc.transform.position, player.position);
         if (distance is >= 200.0f and < 300.0f)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(_destinationPosition - npc.position);
-            npc.rotation = Quaternion.Slerp(npc.rotation, targetRotation, Time.deltaTime * _currentRotationSpeed);
-            npc.Translate(Vector3.forward * (Time.deltaTime * _currentSpeed));
+            Quaternion targetRotation = Quaternion.LookRotation(_destinationPosition - npc.transform.position);
+            npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, targetRotation, Time.deltaTime * _currentRotationSpeed);
+            npc.transform.Translate(Vector3.forward * (Time.deltaTime * _currentSpeed));
             Debug.Log("NPC: Chasing");
-            npc.GetComponent<NPCTankController>().SetTransition(Transition.SawPlayer);
+            controller.SetTransition(Transition.SawPlayer);
         }
         else if (distance >= 300.0f)
         {
@@ -36,11 +44,11 @@ public class AttackState : FSMState
         }
     }
 
-    public override void RunState(Transform player, Transform npc)
+    public override void RunState(Transform player, GameObject npc)
     {
         _destinationPosition = player.position;
-        Quaternion targetRotation = Quaternion.LookRotation(_destinationPosition - npc.position);
-        npc.rotation = Quaternion.Slerp(npc.rotation, targetRotation, Time.deltaTime * _currentRotationSpeed);
+        Quaternion targetRotation = Quaternion.LookRotation(_destinationPosition - npc.transform.position);
+        npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, targetRotation, Time.deltaTime * _currentRotationSpeed);
         npc.GetComponent<NPCTankController>().ShootBullet();
     }
     
