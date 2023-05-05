@@ -23,7 +23,7 @@ public class PatrolState : FSMState
     {
         // Check health
         var controller = npc.GetComponent<NPCTankController>();
-        if (controller.Health < 50)
+        if (controller.health < 50)
         {
             controller.SetTransition(Transition.Damaged);
             return;
@@ -31,7 +31,6 @@ public class PatrolState : FSMState
         // Check distance to player to chase
         if (Vector3.Distance(npc.transform.position, player.position) <= _playerNearRadius)
         {
-            Debug.Log("Chasing");
             if (controller != null)
             {
                 controller.SetTransition(Transition.SawPlayer);
@@ -48,7 +47,6 @@ public class PatrolState : FSMState
         // Search new point if reached
         if (Vector3.Distance(npc.transform.position, _destinationPosition) <= _patrolRadius)
         {
-            Debug.Log("Destiny reached. Searching next point");
             FindNextPoint();
         }
         

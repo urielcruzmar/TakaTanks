@@ -17,7 +17,7 @@ public class ChaseState : FSMState
     {
         // Check health
         var controller = npc.GetComponent<NPCTankController>();
-        if (controller.Health < 50)
+        if (controller.health < 50)
         {
             controller.SetTransition(Transition.Damaged);
             return;
@@ -25,15 +25,14 @@ public class ChaseState : FSMState
         // Check distance
         _destinationPosition = player.position;
         float distance = Vector3.Distance(npc.transform.position, _destinationPosition);
-        if (distance <= 200.0f)
+        switch (distance)
         {
-            Debug.Log("NPC: Attacking");
-            controller.SetTransition(Transition.ReachPlayer);
-        }
-        else if (distance >= 300.0f)
-        {
-            Debug.Log("NPC: Patrolling");
-            controller.SetTransition(Transition.LostPlayer);
+            case <= 200.0f:
+                controller.SetTransition(Transition.ReachPlayer);
+                break;
+            case >= 300.0f:
+                controller.SetTransition(Transition.LostPlayer);
+                break;
         }
     }
 

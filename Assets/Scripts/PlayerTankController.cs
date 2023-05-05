@@ -15,12 +15,13 @@ public class PlayerTankController : MonoBehaviour
     [SerializeField] private float maxFrontSpeed = 300.0f;
     [SerializeField] private float maxRearSpeed = -300.0f;
     [SerializeField] private float attackSpeed = 0.5f;
+    [SerializeField] private GameObject gameOverScreen;
     private float _currentSpeed, _targetSpeed;
     private float _timePassed;
     private float _health = 100;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         
     }
@@ -36,19 +37,17 @@ public class PlayerTankController : MonoBehaviour
     {
         // Mouse pointing
         // Upwards plante to intersect player
-        Plane playersPlane = new Plane(Vector3.up, transform.position + new Vector3(0, 0, 0));
+        var playersPlane = new Plane(Vector3.up, transform.position + new Vector3(0, 0, 0));
         
         // Raycast
-        Ray rayCast = //Camera.main.ScreenPointToRay(Input.mousePosition);
+        var rayCast = //Camera.main.ScreenPointToRay(Input.mousePosition);
         UnityEngine.Camera.main.ScreenPointToRay(Input.mousePosition);
         
         // Distance
-        float impactDistance = 0;
-
-        if (playersPlane.Raycast(rayCast, out impactDistance))
+        if (playersPlane.Raycast(rayCast, out var impactDistance))
         {
-            Vector3 impactPoint = rayCast.GetPoint(impactDistance);
-            Quaternion targetRotation = Quaternion.LookRotation(impactPoint - transform.position);
+            var impactPoint = rayCast.GetPoint(impactDistance);
+            var targetRotation = Quaternion.LookRotation(impactPoint - transform.position);
             turret.transform.rotation = Quaternion.Slerp(turret.transform.rotation, targetRotation, Time.deltaTime * turretRotationSpeed);
         }
         
@@ -84,26 +83,22 @@ public class PlayerTankController : MonoBehaviour
     private void UpdateWeapon()
     {
         _timePassed += Time.deltaTime;
-
-        if (Input.GetMouseButtonDown(0) && _timePassed >= attackSpeed)
-        {
-            // Time reset
-            _timePassed = 0.0f;
-            // Bullet instance
-            Instantiate(bullet, bulletSpawnPoint.transform.position, bulletSpawnPoint.transform.rotation);
-        }
+        if (!Input.GetMouseButtonDown(0) || !(_timePassed >= attackSpeed)) return;
+        // Time reset
+        _timePassed = 0.0f;
+        // Bullet instance
+        bullet.tag = "Bullet";
+        bullet.layer = LayerMask.NameToLayer("Player");
+        Instantiate(bullet, bulletSpawnPoint.transform.position, bulletSpawnPoint.transform.rotation);
     }
     
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("NPCBullet"))
-        {
-            _health -= 20;
-            if (_health <= 0)
-            {
-                Debug.Log("Player dead");
-                Application.Quit();
-            }
-        }
+        if (!collision.gameObject.CompareTag("NPCBullet")) return;
+        _health -= 20;
+        if (!(_health <= 0)) return;
+        Debug.Log("Player dead");
+        gameOverScreen.SetActive(true);
+        Time.timeScale = 0;
     }
 }

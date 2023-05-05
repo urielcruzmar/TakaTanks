@@ -14,9 +14,9 @@ GameObject:
   - component: {fileID: 6500000}
   - component: {fileID: 5400000}
   - component: {fileID: 114039063724979296}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Bullet
-  m_TagString: NPCBullet
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

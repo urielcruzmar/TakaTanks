@@ -22,25 +22,26 @@ public class AttackState : FSMState
     {
         // Check health
         var controller = npc.GetComponent<NPCTankController>();
-        if (controller.Health < 50)
+        if (controller.health < 50)
         {
             controller.SetTransition(Transition.Damaged);
             return;
         }
         // Check distance
         float distance = Vector3.Distance(npc.transform.position, player.position);
-        if (distance is >= 200.0f and < 300.0f)
+        switch (distance)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(_destinationPosition - npc.transform.position);
-            npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, targetRotation, Time.deltaTime * _currentRotationSpeed);
-            npc.transform.Translate(Vector3.forward * (Time.deltaTime * _currentSpeed));
-            Debug.Log("NPC: Chasing");
-            controller.SetTransition(Transition.SawPlayer);
-        }
-        else if (distance >= 300.0f)
-        {
-            Debug.Log("NPC: Patrolling");
-            npc.GetComponent<NPCTankController>().SetTransition(Transition.LostPlayer);
+            case >= 200.0f and < 300.0f:
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(_destinationPosition - npc.transform.position);
+                npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, targetRotation, Time.deltaTime * _currentRotationSpeed);
+                npc.transform.Translate(Vector3.forward * (Time.deltaTime * _currentSpeed));
+                controller.SetTransition(Transition.SawPlayer);
+                break;
+            }
+            case >= 300.0f:
+                npc.GetComponent<NPCTankController>().SetTransition(Transition.LostPlayer);
+                break;
         }
     }
 

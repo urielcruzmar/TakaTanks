@@ -27,7 +27,7 @@ public abstract class FSMState
         
         // Add transition
         _map.Add(transition, id);
-        Debug.Log("Transition " + transition + " added");
+        // Debug.Log("Transition " + transition + " added");
     }
     
     // Delete transition

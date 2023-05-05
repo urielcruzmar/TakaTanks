@@ -18,40 +18,30 @@ public class RetreatState : FSMState
 
     public override void CheckTransitionRules(Transform player, GameObject npc)
     {
-        // If retreated continue
-        if (_retreatCompleted)
+        // If not retreated, do not transition
+        if (!_retreatCompleted) return;
+        // Transition to search player in las location
+        var controller = npc.GetComponent<NPCTankController>();
+        float distance = Vector3.Distance(npc.transform.position, _destinationPosition);
+        if (distance <= 300.0f)
         {
-            _retreatCompleted = false;
-            var controller = npc.GetComponent<NPCTankController>();
-            float distance = Vector3.Distance(npc.transform.position, _destinationPosition);
-            if (distance <= 100.0f)
-            {
-                _destinationPosition = Vector3.zero;
-                Debug.Log("NPC: Attacking");
-                controller.SetTransition(Transition.LostPlayer);
-            }
+            _destinationPosition = Vector3.zero;
+            controller.SetTransition(Transition.LostPlayer);
         }
     }
 
     public override void RunState(Transform player, GameObject npc)
     {
-        // Check if retreat completed
-        if (_retreatCompleted)
-        {
-            Debug.Log("Retreat completed");
-        }
         // Check if retreat point set
-        else if (_destinationPosition.Equals(Vector3.zero))
+        if (_destinationPosition.Equals(Vector3.zero))
         {
-            Debug.Log("Finding point");
             FindRetreatPoint();
         }
         // Check distance to retreat point
         else if (Vector3.Distance(npc.transform.position, _destinationPosition) <= 100.0f)
         {
-            Debug.Log("Retreat point reached");
             // Restore health
-            npc.GetComponent<NPCTankController>().Health = 100;
+            npc.GetComponent<NPCTankController>().health = 100;
             // Call reinforcements
             npc.GetComponent<NPCTankController>().CallFriend(_destinationPosition);
             // Change destination to player position
@@ -59,16 +49,14 @@ public class RetreatState : FSMState
             _retreatCompleted = true;
         }
         // Move to position
-        else
-        {
-            // Rotate npc
-            var position = npc.transform.position;
-            var lookPos = _destinationPosition - position;
-            Quaternion targetRotation = Quaternion.FromToRotation(Vector3.forward, lookPos);
-            npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, targetRotation, Time.deltaTime * _currentRotationSpeed);
-            // Move npc
-            npc.transform.Translate(Vector3.forward * (Time.deltaTime * _currentSpeed));
-        }
+        // Rotate npc
+        var position = npc.transform.position;
+        var lookPos = _destinationPosition - position;
+        Quaternion targetRotation = Quaternion.FromToRotation(Vector3.forward, lookPos);
+        npc.transform.rotation = Quaternion.Slerp(npc.transform.rotation, targetRotation, Time.deltaTime * _currentRotationSpeed);
+        // Move npc
+        npc.transform.Translate(Vector3.forward * (Time.deltaTime * _currentSpeed));
+        
     }
 
     private void FindRetreatPoint()
